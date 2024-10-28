@@ -1,0 +1,84 @@
+/* Reset some basic styles */
+body, h1, h2, p {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif; /* Clean, modern font */
+    background-color: #f4f4f4; /* Light background color */
+    color: #333; /* Dark text color */
+    display: flex;
+    justify-content: center; /* Center align main content */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+}
+
+#loginSection, #registerSection {
+    background-color: #ffffff; /* White background for the forms */
+    padding: 20px; /* Padding around the form */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 300px; /* Fixed width for the form */
+}
+
+h1 {
+    text-align: center; /* Center the title */
+    margin-bottom: 20px; /* Spacing below the title */
+}
+
+h2 {
+    margin-bottom: 10px; /* Spacing below the section title */
+    color: #007BFF; /* Blue color for section headings */
+}
+
+label {
+    display: block; /* Block display for labels */
+    margin-bottom: 5px; /* Spacing below the label */
+    font-weight: bold; /* Make labels bold */
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding inside the input fields */
+    margin-bottom: 15px; /* Spacing below each input field */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px; /* Slightly rounded corners */
+    font-size: 14px; /* Font size for input text */
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+    border-color: #007BFF; /* Blue border on focus */
+    outline: none; /* Remove default outline */
+}
+
+button {
+    width: 100%; /* Full width for the button */
+    padding: 10px; /* Padding inside the button */
+    background-color: #007BFF; /* Blue background for button */
+    color: #ffffff; /* White text color */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Slightly rounded corners */
+    font-size: 16px; /* Larger font size for button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+p {
+    text-align: center; 
+    margin-top: 10px; 
+}
+
+a {
+    color: #007BFF; /* Blue color for links */
+    text-decoration: none; /* Remove underline from links */
+}
+
+a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

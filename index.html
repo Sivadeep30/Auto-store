@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Online Automobile Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar and Header -->
+    <header>
+        <div class="logo">AutoStore</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="cars.html">Cars</a></li>
+                <li><a href="ucars.html">Used Cars</a></li>
+                <li><a href="about.html">About</a></li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn" onclick="toggleDropdown()">Login</a>
+                    <div id="loginDropdown" class="dropdown-content" style="display: none;">
+                        <a href="login.html">User</a>
+                        <a href="admin_login.html">Admin</a>
+                    </div>
+                </li>
+                <li id="profileMenu" style="display: none;">
+                    <a href="profile.html">Profile</a>
+                </li>
+            </ul>
+            <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <h1>Welcome to the Online Automobile Store</h1>
+    </div>
+
+    <main>
+        <h1>Welcome to AutoStore</h1>
+        <p>Explore the latest car models and amazing deals!</p>
+    </main>
+    
+    <div id="footer-container"></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

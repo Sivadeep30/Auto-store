@@ -1,0 +1,51 @@
+/* footer.css */
+
+/* Footer styling */
+footer {
+    background-color: #1E3A8A; /* Midnight Blue */
+    color: #FAFAFA; /* Soft White */
+    padding: 2rem 2rem; /* Padding for top and bottom */
+    text-align: center; /* Center text */
+    border-top: 2px solid #00B4D8; /* Border at the top */
+    margin-top: 20px; /* Space above the footer */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between; /* Space between links and social icons */
+    align-items: center; /* Center items vertically */
+    flex-wrap: wrap; /* Allow items to wrap on small screens */
+}
+
+.footer-links {
+    list-style-type: none; /* Remove bullet points */
+    display: flex; /* Horizontal links */
+    gap: 20px; /* Space between links */
+}
+
+.footer-links a {
+    color: #FAFAFA; /* Link color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.footer-links a:hover {
+    color: #00B4D8; /* Change color on hover */
+}
+
+.social-media a {
+    margin: 0 10px; /* Margin for social icons */
+}
+
+.social-media img {
+    width: 24px; /* Icon size */
+    height: 24px; /* Icon size */
+}
+
+.footer-bottom {
+    margin-top: 20px; /* Space above copyright text */
+}
+
+.footer-bottom p {
+    margin: 0; /* Remove default margin */
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <h1>Register</h1>
+    <form id="registerForm">
+        <label for="regName">Name:</label>
+        <input type="text" id="regName" required>
+
+        <label for="regEmail">Email:</label>
+        <input type="email" id="regEmail" required>
+
+        <label for="regLocation">Location:</label>
+        <input type="text" id="regLocation" required>
+
+        <label for="regPassword">Password:</label>
+        <input type="password" id="regPassword" required>
+
+        <button type="submit">Register</button>
+    </form>
+    <script>
+        // Handle registration
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const data = {
+        name: document.getElementById("regName").value,          // Make sure this ID matches
+        email: document.getElementById("regEmail").value,        // Make sure this ID matches
+        location: document.getElementById("regLocation").value,  // Make sure this ID matches
+        password: document.getElementById("regPassword").value   // Make sure this ID matches
+    };
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.message);
+            // Optionally redirect or toggle forms here
+        } else {
+            alert(result.error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred during registration. Please try again.');
+    }
+});
+
+    </script>
+</body>
+</html>
