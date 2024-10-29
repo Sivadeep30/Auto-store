@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Brands</title>
+    <link rel="stylesheet" href="brand.css"> <!-- Link to CSS file -->
+</head>
+<body>
+    <h1>Car Brands</h1>
+    <div class="brands-container" id="brandsContainer">
+        <!-- Brand cards will be populated here -->
+    </div>
+
+    <!-- JavaScript to populate brands and handle clicks -->
+    <script>
+        const brands = [
+            { name: "Audi", img: "images/audi.jpg" },
+            { name: "BMW", img: "images/bmw.jpg" },
+            { name: "Lamborghini", img: "images/lamborghini.jpg" },
+            { name: "Tata", img: "images/tata.jpg" },
+            { name: "Toyota", img: "images/toyota.jpg" },
+            { name: "Renault", img: "images/renault.jpg" },
+            { name: "Nissan", img: "images/nissan.jpg" },
+            { name: "Hyundai", img: "images/hyundai.jpg" },
+            { name: "Ferrari", img: "images/ferrari.jpg" },
+            { name: "Maruti", img: "images/maruti.jpg" }
+        ];
+
+        const brandsContainer = document.getElementById("brandsContainer");
+
+        // Function to create brand cards
+        function createBrandCards() {
+            brands.forEach(brand => {
+                const brandCard = document.createElement("div");
+                brandCard.classList.add("brand-card");
+
+                brandCard.innerHTML = `
+                    <img src="${brand.img}" alt="${brand.name}">
+                    <h3>${brand.name}</h3>
+                `;
+
+                brandCard.addEventListener("click", () => {
+                    window.location.href = `cars.html?brand=${brand.name}`;
+                });
+
+                brandsContainer.appendChild(brandCard);
+            });
+        }
+
+        createBrandCards();
+    </script>
+</body>
+</html>
