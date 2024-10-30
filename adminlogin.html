@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="adminlogin.css"> <!-- Link to CSS file -->
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+            <label for="adminId">Admin ID:</label>
+            <input type="text" id="adminId" name="adminId" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Login</button>
+            <p id="error-message" style="color: red;"></p>
+        </form>
+    </div>
+
+    <script>
+        // Fixed credentials
+        const fixedAdminId = "admin123";
+        const fixedPassword = "password123";
+
+        document.getElementById("adminLoginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const adminId = document.getElementById("adminId").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            if (adminId === fixedAdminId && password === fixedPassword) {
+                window.location.href = "admin_dashboard.html"; // Redirect to the admin dashboard
+            } else {
+                errorMessage.textContent = "Invalid Admin ID or Password";
+            }
+        });
+    </script>
+</body>
+</html>

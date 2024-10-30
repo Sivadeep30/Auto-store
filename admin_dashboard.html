@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admindashboard.css"> <!-- Link to CSS file -->
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <h2>Add New Car</h2>
+    
+    <div class="form-container">
+        <form id="addCarForm">
+            <label for="brand">Brand:</label>
+            <select id="brand" name="brand" required>
+                <option value="Audi">Audi</option>
+                <option value="BMW">BMW</option>
+                <option value="Lamborghini">Lamborghini</option>
+                <option value="Tata">Tata</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Renault">Renault</option>
+                <option value="Nissan">Nissan</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Ferrari">Ferrari</option>
+                <option value="Maruti">Maruti</option>
+            </select>
+
+            <label for="carName">Car Name:</label>
+            <input type="text" id="carName" name="carName" required>
+
+            <label for="rate">Rate:</label>
+            <input type="number" id="rate" name="rate" required>
+
+            <label for="type">Type:</label>
+            <select id="type" name="type" required>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Electric</option>
+            </select>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+
+            <label for="imageUrl">Image:</label>
+            <input type="file" id="imageUrl" name="imageUrl" accept="image/*" required>
+
+            <button type="submit">Add Car</button>
+        </form>
+    </div>
+
+    <h2>Manage Cars</h2>
+    <table id="carsTable">
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Car Name</th>
+                <th>Rate</th>
+                <th>Type</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Car data will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        const cars = []; // Array to store car details temporarily
+
+        document.getElementById("addCarForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const brand = document.getElementById("brand").value;
+            const carName = document.getElementById("carName").value;
+            const rate = document.getElementById("rate").value;
+            const type = document.getElementById("type").value;
+            const description = document.getElementById("description").value;
+            const imageUrl = document.getElementById("imageUrl").files[0];
+
+            // Check if an image file is selected
+            if (!imageUrl) {
+                alert("Please upload an image.");
+                return;
+            }
+
+            // Create a URL for the image preview (temporary only)
+            const imagePreviewUrl = URL.createObjectURL(imageUrl);
+
+            // Add car details to the array
+            cars.push({ brand, carName, rate, type, description, imagePreviewUrl });
+            populateCarTable();
+            this.reset();
+        });
+
+        // Function to populate car table
+        function populateCarTable() {
+            const carsTableBody = document.getElementById("carsTable").querySelector("tbody");
+            carsTableBody.innerHTML = ""; // Clear the table body
+
+            cars.forEach((car, index) => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${car.brand}</td>
+                    <td>${car.carName}</td>
+                    <td>${car.rate}</td>
+                    <td>${car.type}</td>
+                    <td><img src="${car.imagePreviewUrl}" alt="${car.carName}" style="width: 100px;"></td>
+                    <td>
+                        <button onclick="editCar(${index})">Edit</button>
+                        <button onclick="deleteCar(${index})">Delete</button>
+                    </td>
+                `;
+
+                carsTableBody.appendChild(row);
+            });
+        }
+
+        function editCar(index) {
+            alert(`Edit car at index ${index}`); // Placeholder
+        }
+
+        function deleteCar(index) {
+            cars.splice(index, 1);
+            populateCarTable();
+        }
+    </script>
+</body>
+</html>
