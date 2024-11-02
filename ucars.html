@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Used Cars</title>
+    <link rel="stylesheet" href="used_cars.css">
+</head>
+<body>
+    <h1>Used Cars</h1>
+    <button id="addCarBtn" class="add-car-btn">Add Car</button>
+
+    <!-- Modal form for adding a car -->
+    <div id="addCarModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h2>Add a Used Car</h2>
+            <form id="addUsedCarForm" enctype="multipart/form-data">
+                <label for="carName">Car Name:</label>
+                <input type="text" id="carName" name="carName" required>
+
+                <label for="brand">Brand:</label>
+                <input type="text" id="brand" name="brand" required>
+
+                <label for="rate">Rate:</label>
+                <input type="number" id="rate" name="rate" required>
+
+                <label for="type">Type:</label>
+                <select id="type" name="type" required>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Electric">Electric</option>
+                </select>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="image">Image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+
+                <button type="submit">Add Car</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Container for displaying car cards -->
+    <div id="usedCarsContainer" class="used-cars-container">
+        <!-- Car cards will be populated here -->
+    </div>
+
+    <script src="used_cars.js"></script>
+</body>
+</html>
