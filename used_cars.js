@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <p>Rate: $${car.rate}</p>
                 <p>Type: ${car.type}</p>
                 <p>${car.description}</p>
-                <img src="path/to/upload/directory/${car.imageUrl}" alt="${car.carName}" />
+                <img src="images/${car.imageUrl}" alt="${car.carName}" />
                 <button onclick="deleteCar(${car.id})">Delete</button>
             `;
             usedCarsContainer.appendChild(carCard);

@@ -39,31 +39,6 @@
                 errorMessage.textContent = "Invalid Admin ID or Password";
             }
         });
-        document.getElementById("addCarForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-        
-            const brand = document.getElementById("brand").value;
-            const carName = document.getElementById("carName").value;
-            const rate = document.getElementById("rate").value;
-            const type = document.querySelector('input[name="carType"]:checked').value;
-            const description = document.getElementById("description").value;
-            const imageUrl = document.getElementById("imageUrl").value;
-        
-            fetch("http://localhost:5000/add_car", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ brand, carName, rate, type, description, imageUrl })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                } else if (data.error) {
-                    alert(data.error);
-                }
-            });
-        });
-        
     </script>
 </body>
 </html>

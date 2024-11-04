@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="admindashboard.css"> <!-- Link to CSS file -->
+    <link rel="stylesheet" href="admindashboard.css">
 </head>
 <body>
     <h1>Admin Dashboard</h1>
@@ -67,35 +67,45 @@
     </table>
 
     <script>
-        const cars = []; // Array to store car details temporarily
+        // Fetch initial car data on page load
+        window.onload = fetchCars;
 
+        // Submit form to add a new car
         document.getElementById("addCarForm").addEventListener("submit", function(event) {
             event.preventDefault();
 
-            const brand = document.getElementById("brand").value;
-            const carName = document.getElementById("carName").value;
-            const rate = document.getElementById("rate").value;
-            const type = document.getElementById("type").value;
-            const description = document.getElementById("description").value;
-            const imageUrl = document.getElementById("imageUrl").files[0];
+            const formData = new FormData();
+            formData.append("brand", document.getElementById("brand").value);
+            formData.append("carName", document.getElementById("carName").value);
+            formData.append("rate", document.getElementById("rate").value);
+            formData.append("type", document.getElementById("type").value);
+            formData.append("description", document.getElementById("description").value);
+            formData.append("imageUrl", document.getElementById("imageUrl").files[0]);
 
-            // Check if an image file is selected
-            if (!imageUrl) {
-                alert("Please upload an image.");
-                return;
-            }
-
-            // Create a URL for the image preview (temporary only)
-            const imagePreviewUrl = URL.createObjectURL(imageUrl);
-
-            // Add car details to the array
-            cars.push({ brand, carName, rate, type, description, imagePreviewUrl });
-            populateCarTable();
-            this.reset();
+            fetch("http://localhost:5000/add-car", { // Update to your backend endpoint
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchCars(); // Refresh car list after adding a new car
+            })
+            .catch(error => console.error("Error adding car:", error));
         });
 
-        // Function to populate car table
-        function populateCarTable() {
+        // Fetch all cars from the database and display them
+        function fetchCars() {
+            fetch("http://localhost:5000/get_cars") // Update to your backend endpoint
+            .then(response => response.json())
+            .then(data => {
+                populateCarTable(data);
+            })
+            .catch(error => console.error("Error fetching cars:", error));
+        }
+
+        // Populate car table with data from the database
+        function populateCarTable(cars) {
             const carsTableBody = document.getElementById("carsTable").querySelector("tbody");
             carsTableBody.innerHTML = ""; // Clear the table body
 
@@ -107,10 +117,10 @@
                     <td>${car.carName}</td>
                     <td>${car.rate}</td>
                     <td>${car.type}</td>
-                    <td><img src="${car.imagePreviewUrl}" alt="${car.carName}" style="width: 100px;"></td>
+                    <td><img src="images/${car.imageUrl}" alt="${car.carName}" style="width: 100px;"></td>
                     <td>
-                        <button onclick="editCar(${index})">Edit</button>
-                        <button onclick="deleteCar(${index})">Delete</button>
+                        <button onclick="editCar(${car.id})">Edit</button>
+                        <button onclick="deleteCar(${car.id})">Delete</button>
                     </td>
                 `;
 
@@ -118,13 +128,23 @@
             });
         }
 
-        function editCar(index) {
-            alert(`Edit car at index ${index}`); // Placeholder
+        // Edit car details
+        function editCar(carId) {
+            // Open a modal or form to edit car details
+            alert(`Edit car with ID ${carId}`); // Placeholder for actual edit functionality
         }
 
-        function deleteCar(index) {
-            cars.splice(index, 1);
-            populateCarTable();
+        // Delete car from the database
+        function deleteCar(carId) {
+            fetch(`http://localhost:5000/delete_car/${carId}`, { // Update to your backend endpoint
+                method: "DELETE"
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchCars(); // Refresh car list after deleting a car
+            })
+            .catch(error => console.error("Error deleting car:", error));
         }
     </script>
 </body>

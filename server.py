@@ -1,14 +1,14 @@
 from flask import Flask, request, jsonify
-import mysql.connector
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
+import mysql.connector
 import os
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-UPLOAD_FOLDER = 'C:\\Users\\Asus\\Desktop\\new\\images'  # Define your image upload directory
+UPLOAD_FOLDER = './images'  # Define your image upload directory
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Database connection
@@ -20,7 +20,7 @@ def get_db_connection():
         database="autostore"  # Your database name
     )
 
-# Registration route
+# User Registration Route
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -41,7 +41,7 @@ def register():
     except mysql.connector.IntegrityError:
         return jsonify({"error": "User already exists with this email!"}), 409
 
-# Login route
+# User Login Route
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -60,10 +60,79 @@ def login():
     else:
         return jsonify({"error": "Invalid email or password!"}), 401
 
-# Add used car route with image upload
+# Admin Login Route
+@app.route('/admin-login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    admin_id = "admin"  # Replace with your predefined admin ID
+    admin_password = "admin_pass"  # Replace with your predefined admin password
+    if data['id'] == admin_id and data['password'] == admin_password:
+        return jsonify({"message": "Admin login successful!"}), 200
+    else:
+        return jsonify({"error": "Invalid admin credentials!"}), 401
+
+# Add New Car (Admin)
+@app.route('/add-car', methods=['POST'])
+def add_car():
+    car_name = request.form.get("carName")
+    brand = request.form.get("brand")
+    rate = request.form.get("rate")
+    car_type = request.form.get("type")
+    description = request.form.get("description")
+    image = request.files.get("imageUrl")
+
+    print(car_name,car_type,rate, car_type, description, image)
+
+    image_filename = None
+    if image:
+        image_filename = secure_filename(image.filename)
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
+        image.save(image_path)
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO cars (car_name, brand, rate, type, description, image_url) VALUES (%s, %s, %s, %s, %s, %s)",
+                       (car_name, brand, rate, car_type, description, image_filename))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"message": "Car added successfully!"}), 201
+    except Exception as e:
+        print("Error adding car:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/get_cars', methods=['GET'])
+def get_cars():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, car_name, brand, rate, type, image_url FROM cars")
+        cars = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        # Format the data as a list of dictionaries
+        car_list = []
+        for car in cars:
+            car_list.append({
+                "id": car[0],
+                "carName": car[1],
+                "brand": car[2],
+                "rate": car[3],
+                "type": car[4],
+                "imageUrl": car[5]  # Make sure imageUrl is correctly referenced here
+            })
+
+        return jsonify(car_list), 200
+    except Exception as e:
+        print("Error fetching cars:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
+# Add Used Car (with Image Upload)
 @app.route('/add-used-car', methods=['POST'])
 def add_used_car():
-    # Get form data
     car_name = request.form.get("carName")
     brand = request.form.get("brand")
     rate = request.form.get("rate")
@@ -71,14 +140,12 @@ def add_used_car():
     description = request.form.get("description")
     image = request.files.get("image")
 
-    # Save the image file if uploaded
     image_filename = None
     if image:
         image_filename = secure_filename(image.filename)
         image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
         image.save(image_path)
 
-    # Database connection and insertion
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -87,11 +154,11 @@ def add_used_car():
         conn.commit()
         cursor.close()
         conn.close()
-        return jsonify({"message": "Car added successfully!"}), 201
+        return jsonify({"message": "Used car added successfully!"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Get all used cars route
+# Get All Used Cars
 @app.route('/get-used-cars', methods=['GET'])
 def get_used_cars():
     conn = get_db_connection()
@@ -100,9 +167,9 @@ def get_used_cars():
     cars = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(cars)
+    return jsonify(cars), 200
 
-# Delete used car route
+# Delete Used Car by ID
 @app.route('/delete-used-car/<int:car_id>', methods=['DELETE'])
 def delete_used_car(car_id):
     conn = get_db_connection()
@@ -111,7 +178,7 @@ def delete_used_car(car_id):
     conn.commit()
     cursor.close()
     conn.close()
-    return jsonify({"message": "Car deleted successfully!"})
+    return jsonify({"message": "Used car deleted successfully!"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
