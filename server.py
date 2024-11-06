@@ -129,6 +129,46 @@ def get_cars():
         print("Error fetching cars:", str(e))
         return jsonify({"error": str(e)}), 500
 
+# Update Car Details (Admin)
+@app.route('/update_car/<int:car_id>', methods=['PUT'])
+def update_car(car_id):
+    data = request.get_json()
+    car_name = data.get("carName")
+    brand = data.get("brand")
+    rate = data.get("rate")
+    car_type = data.get("type")
+    description = data.get("description")
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE cars
+            SET car_name = %s, brand = %s, rate = %s, type = %s, description = %s
+            WHERE id = %s
+        """, (car_name, brand, rate, car_type, description, car_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"message": "Car updated successfully!"}), 200
+    except Exception as e:
+        print("Error updating car:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+# Delete Car (Admin)
+@app.route('/delete_car/<int:car_id>', methods=['DELETE'])
+def delete_car(car_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM cars WHERE id = %s", (car_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"message": "Car deleted successfully!"}), 200
+    except Exception as e:
+        print("Error deleting car:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 # Add Used Car (with Image Upload)
 @app.route('/add-used-car', methods=['POST'])

@@ -129,23 +129,49 @@
         }
 
         // Edit car details
-        function editCar(carId) {
-            // Open a modal or form to edit car details
-            alert(`Edit car with ID ${carId}`); // Placeholder for actual edit functionality
-        }
+function editCar(carId) {
+    const carName = prompt("Enter new car name:");
+    const brand = prompt("Enter new brand:");
+    const rate = prompt("Enter new rate:");
+    const type = prompt("Enter new type (Petrol, Diesel, Electric):");
+    const description = prompt("Enter new description:");
 
-        // Delete car from the database
-        function deleteCar(carId) {
-            fetch(`http://localhost:5000/delete_car/${carId}`, { // Update to your backend endpoint
-                method: "DELETE"
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                fetchCars(); // Refresh car list after deleting a car
-            })
-            .catch(error => console.error("Error deleting car:", error));
-        }
+    const updatedData = {
+        carName: carName,
+        brand: brand,
+        rate: rate,
+        type: type,
+        description: description
+    };
+
+    fetch(`http://localhost:5000/update_car/${carId}`, { // Update to your backend endpoint
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updatedData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        fetchCars(); // Refresh the car list
+    })
+    .catch(error => console.error("Error updating car:", error));
+}
+
+// Delete car from the database
+function deleteCar(carId) {
+    fetch(`http://localhost:5000/delete_car/${carId}`, { // Update to your backend endpoint
+        method: "DELETE"
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        fetchCars(); // Refresh the car list after deleting a car
+    })
+    .catch(error => console.error("Error deleting car:", error));
+}
+
     </script>
 </body>
 </html>
