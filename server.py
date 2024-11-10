@@ -239,7 +239,41 @@ def get_cars_by_brand(brand):
         print("Error fetching cars by brand:", str(e))
         return jsonify({"error": str(e)}), 500
 
+@app.route('/purchase', methods=['POST'])
+def handle_purchase():
+    try:
+        # Get purchase details from the request body
+        data = request.json
+        car_name = data.get('carName')
+        name = data.get('name')
+        email = data.get('email')
+        phone = data.get('phone')
+        location = data.get('location')
 
+        if not all([car_name, name, email, phone, location]):
+            return jsonify({"error": "All fields are required!"}), 400
+
+        # SQL query to insert purchase details into the 'purchases' table
+        query = """
+            INSERT INTO purchases (car_name, name, email, phone, location)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        # Execute the query and commit the changes to the database
+        cursor.execute(query, (car_name, name, email, phone, location))
+        connection.commit()
+
+        return jsonify({"message": "Purchase successful!"}), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while processing the purchase"}), 500
+    finally:
+        cursor.close()
+        connection.close()
 
 if __name__ == '__main__':
     app.run(debug=True)

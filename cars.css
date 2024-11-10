@@ -28,6 +28,11 @@ h1 {
     width: 250px;
     overflow: hidden;
     text-align: left;
+    transition: transform 0.2s;
+}
+
+.car-card:hover {
+    transform: scale(1.05);
 }
 
 .car-card img {
@@ -55,4 +60,102 @@ h1 {
 
 .car-info p strong {
     color: #222;
+}
+
+/* Buy Button */
+.buy-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.buy-button:hover {
+    background-color: #0056b3;
+}
+
+/* Modal and Form Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    animation: fadeIn 0.3s;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.modal-content form label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.modal-content form input[type="text"],
+.modal-content form input[type="email"],
+.modal-content form input[type="tel"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.modal-content button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #218838;
+}
+
+.modal-content button[type="button"]:last-child {
+    background-color: #dc3545;
+}
+
+.modal-content button[type="button"]:last-child:hover {
+    background-color: #c82333;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

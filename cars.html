@@ -4,25 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cars by Brand</title>
-    <link rel="stylesheet" href="cars.css"> <!-- Link to CSS file -->
+    <link rel="stylesheet" href="cars.css">
 </head>
 <body>
     <h1>Available Cars for <span id="brandTitle"></span></h1>
     <div class="car-container" id="carList"></div>
 
-    <script>
-        const brand = new URLSearchParams(window.location.search).get("brand"); // Get brand from URL
+    <!-- Hidden form for buying a car -->
+    <div id="buyFormContainer" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Purchase Car</h2>
+            <form id="buyForm">
+                <label for="carName">Car Name:</label>
+                <input type="text" id="carName" name="carName" readonly><br>
 
-        // Set the brand title dynamically
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br>
+
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" required><br>
+
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required><br>
+
+                <button type="button" onclick="submitPurchase()">Submit</button>
+                <button type="button" onclick="closeForm()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const brand = new URLSearchParams(window.location.search).get("brand");
         document.getElementById("brandTitle").innerText = brand;
 
-        // Function to fetch and display cars by brand
         function fetchCarsByBrand(brand) {
             fetch(`http://localhost:5000/cars/${brand}`)
                 .then(response => response.json())
                 .then(cars => {
                     const carList = document.getElementById("carList");
-                    carList.innerHTML = ""; // Clear any existing content
+                    carList.innerHTML = "";
 
                     cars.forEach(car => {
                         const carCard = document.createElement("div");
@@ -35,6 +58,7 @@
                                 <p><strong>Rate:</strong> ${car.rate}</p>
                                 <p><strong>Type:</strong> ${car.type}</p>
                                 <p><strong>Description:</strong> ${car.description}</p>
+                                <button class="buy-button" onclick="openForm('${car.car_name}')">Buy</button>
                             </div>
                         `;
 
@@ -42,6 +66,48 @@
                     });
                 })
                 .catch(error => console.error("Error fetching cars:", error));
+        }
+
+        // Open the buy form with the selected car name
+        function openForm(carName) {
+            document.getElementById("carName").value = carName;
+            document.getElementById("buyFormContainer").style.display = "block";
+        }
+
+        // Close the buy form
+        function closeForm() {
+            document.getElementById("buyFormContainer").style.display = "none";
+        }
+
+        // Submit purchase details
+        function submitPurchase() {
+            const formData = {
+                carName: document.getElementById("carName").value,
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                location: document.getElementById("location").value
+            };
+
+            // Send POST request to backend server
+            fetch("http://localhost:5000/purchase", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message); // Display success message
+                    closeForm(); // Close the form after successful submission
+                } else {
+                    alert("An error occurred. Please try again."); // Display error message
+                }
+            })
+            .catch(error => {
+                console.error("Error submitting purchase:", error);
+                alert("An error occurred. Please try again.");
+            });
         }
 
         // Call the function on page load
