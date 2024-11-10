@@ -29,7 +29,7 @@
             };
 
             try {
-                const response = await fetch('/login', {
+                const response = await fetch('http://127.0.0.1:5000/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -39,7 +39,7 @@
                 if (response.ok) {
                     alert(result.message);
                     // Redirect to user profile or dashboard page on success
-                    window.location.href = "profile.html"; // Example: change to your actual dashboard/profile page
+                    window.location.href = "index.html"; // Example: change to your actual dashboard/profile page
                 } else {
                     alert(result.error);
                 }

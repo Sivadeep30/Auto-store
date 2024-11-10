@@ -7,11 +7,14 @@
     <link rel="stylesheet" href="cars.css"> <!-- Link to CSS file -->
 </head>
 <body>
-    <h1>Available Cars</h1>
-    <div id="carList"></div>
+    <h1>Available Cars for <span id="brandTitle"></span></h1>
+    <div class="car-container" id="carList"></div>
 
     <script>
         const brand = new URLSearchParams(window.location.search).get("brand"); // Get brand from URL
+
+        // Set the brand title dynamically
+        document.getElementById("brandTitle").innerText = brand;
 
         // Function to fetch and display cars by brand
         function fetchCarsByBrand(brand) {
@@ -26,11 +29,13 @@
                         carCard.classList.add("car-card");
 
                         carCard.innerHTML = `
-                            <img src="${car.image_url}" alt="${car.car_name}" style="width: 200px;">
-                            <h3>${car.car_name}</h3>
-                            <p>Rate: ${car.rate}</p>
-                            <p>Type: ${car.car_type}</p>
-                            <p>Description: ${car.description}</p>
+                            <img src="images/${car.image_url}" alt="${car.car_name}">
+                            <div class="car-info">
+                                <h3>${car.car_name}</h3>
+                                <p><strong>Rate:</strong> ${car.rate}</p>
+                                <p><strong>Type:</strong> ${car.type}</p>
+                                <p><strong>Description:</strong> ${car.description}</p>
+                            </div>
                         `;
 
                         carList.appendChild(carCard);

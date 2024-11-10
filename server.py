@@ -220,5 +220,26 @@ def delete_used_car(car_id):
     conn.close()
     return jsonify({"message": "Used car deleted successfully!"}), 200
 
+# Get Cars by Brand
+@app.route('/cars/<string:brand>', methods=['GET'])
+def get_cars_by_brand(brand):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM cars WHERE brand = %s", (brand,))
+        cars = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        if not cars:
+            return jsonify({"error": f"No cars found for brand {brand}"}), 404
+
+        return jsonify(cars), 200
+    except Exception as e:
+        print("Error fetching cars by brand:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
