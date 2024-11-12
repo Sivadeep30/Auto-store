@@ -8,8 +8,9 @@
 </head>
 <body>
     <h1>Admin Dashboard</h1>
+
+    <!-- Add New Car Section -->
     <h2>Add New Car</h2>
-    
     <div class="form-container">
         <form id="addCarForm">
             <label for="brand">Brand:</label>
@@ -49,6 +50,7 @@
         </form>
     </div>
 
+    <!-- Manage Cars Section -->
     <h2>Manage Cars</h2>
     <table id="carsTable">
         <thead>
@@ -66,9 +68,31 @@
         </tbody>
     </table>
 
+    <!-- Purchase Records Section -->
+    <h2>Purchase Records</h2>
+    <table id="purchaseTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Car Name</th>
+                <th>Customer Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th>Purchase Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be added dynamically by JavaScript -->
+        </tbody>
+    </table>
+
     <script>
-        // Fetch initial car data on page load
-        window.onload = fetchCars;
+        // Fetch initial car data and purchase records on page load
+        window.onload = function() {
+            fetchCars();
+            fetchPurchases();
+        };
 
         // Submit form to add a new car
         document.getElementById("addCarForm").addEventListener("submit", function(event) {
@@ -109,7 +133,7 @@
             const carsTableBody = document.getElementById("carsTable").querySelector("tbody");
             carsTableBody.innerHTML = ""; // Clear the table body
 
-            cars.forEach((car, index) => {
+            cars.forEach(car => {
                 const row = document.createElement("tr");
 
                 row.innerHTML = `
@@ -129,49 +153,75 @@
         }
 
         // Edit car details
-function editCar(carId) {
-    const carName = prompt("Enter new car name:");
-    const brand = prompt("Enter new brand:");
-    const rate = prompt("Enter new rate:");
-    const type = prompt("Enter new type (Petrol, Diesel, Electric):");
-    const description = prompt("Enter new description:");
+        function editCar(carId) {
+            const carName = prompt("Enter new car name:");
+            const brand = prompt("Enter new brand:");
+            const rate = prompt("Enter new rate:");
+            const type = prompt("Enter new type (Petrol, Diesel, Electric):");
+            const description = prompt("Enter new description:");
 
-    const updatedData = {
-        carName: carName,
-        brand: brand,
-        rate: rate,
-        type: type,
-        description: description
-    };
+            const updatedData = {
+                carName: carName,
+                brand: brand,
+                rate: rate,
+                type: type,
+                description: description
+            };
 
-    fetch(`http://localhost:5000/update_car/${carId}`, { // Update to your backend endpoint
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(updatedData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        fetchCars(); // Refresh the car list
-    })
-    .catch(error => console.error("Error updating car:", error));
-}
+            fetch(`http://localhost:5000/update_car/${carId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchCars();
+            })
+            .catch(error => console.error("Error updating car:", error));
+        }
 
-// Delete car from the database
-function deleteCar(carId) {
-    fetch(`http://localhost:5000/delete_car/${carId}`, { // Update to your backend endpoint
-        method: "DELETE"
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        fetchCars(); // Refresh the car list after deleting a car
-    })
-    .catch(error => console.error("Error deleting car:", error));
-}
+        // Delete car from the database
+        function deleteCar(carId) {
+            fetch(`http://localhost:5000/delete_car/${carId}`, {
+                method: "DELETE"
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchCars();
+            })
+            .catch(error => console.error("Error deleting car:", error));
+        }
 
+        // Fetch purchases from the server and display them in the table
+        function fetchPurchases() {
+            fetch("http://localhost:5000/admin/purchases")
+                .then(response => response.json())
+                .then(purchases => {
+                    const tableBody = document.getElementById("purchaseTable").getElementsByTagName("tbody")[0];
+                    tableBody.innerHTML = "";  // Clear existing rows
+
+                    purchases.forEach(purchase => {
+                        const row = document.createElement("tr");
+
+                        row.innerHTML = `
+                            <td>${purchase.id}</td>
+                            <td>${purchase.car_name}</td>
+                            <td>${purchase.name}</td>
+                            <td>${purchase.email}</td>
+                            <td>${purchase.phone}</td>
+                            <td>${purchase.location}</td>
+                            <td>${purchase.purchase_date}</td>
+                        `;
+
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error("Error fetching purchases:", error));
+        }
     </script>
 </body>
 </html>

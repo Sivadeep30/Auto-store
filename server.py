@@ -275,5 +275,40 @@ def handle_purchase():
         cursor.close()
         connection.close()
 
+@app.route('/admin/purchases', methods=['GET'])
+def get_purchases():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        # Execute a query to fetch all purchase records
+        cursor.execute("SELECT * FROM purchases")
+        purchases = cursor.fetchall()
+        
+        cursor.close()
+        conn.close()
+        
+        # Format the data to return in JSON format
+        purchase_list = [
+            {
+                "id": purchase["id"],
+                "car_name": purchase["car_name"],
+                "name": purchase["name"],
+                "email": purchase["email"],
+                "phone": purchase["phone"],
+                "location": purchase["location"],
+                "purchase_date": purchase["purchase_date"].strftime('%Y-%m-%d %H:%M:%S')
+            }
+            for purchase in purchases
+        ]
+        
+        return jsonify(purchase_list), 200
+    
+    except Exception as e:
+        print("Error fetching purchases:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
