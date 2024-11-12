@@ -48,3 +48,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const userEmail = localStorage.getItem("userEmail");
+
+        if (userEmail) {
+            // Hide login button and show profile button
+            document.querySelector(".dropdown").style.display = "none";
+            document.getElementById("profileMenu").style.display = "block";
+        } else {
+            // Show login button if user is not logged in
+            document.querySelector(".dropdown").style.display = "block";
+            document.getElementById("profileMenu").style.display = "none";
+        }
+    });
+

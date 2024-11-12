@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="profile.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <div id="auth-buttons">
+        <button id="profile-btn" onclick="loadProfile()">View Profile</button>
+        <button id="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div id="profile-section" style="display: none;">
+        <h2>User Profile</h2>
+        <p><strong>Name:</strong> <span id="profile-name"></span></p>
+        <p><strong>Email:</strong> <span id="profile-email"></span></p>
+        <p><strong>Location:</strong> <span id="profile-location"></span></p>
+    </div>
+
+    <script>
+        // Function to load profile data when "View Profile" is clicked
+        function loadProfile() {
+            const userEmail = localStorage.getItem("userEmail");
+        
+            if (userEmail) {
+                fetch(`http://127.0.0.1:5000/profile?email=${userEmail}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.profile) {
+                            document.getElementById('profile-name').innerText = data.profile.name;
+                            document.getElementById('profile-email').innerText = data.profile.email;
+                            document.getElementById('profile-location').innerText = data.profile.location;
+                            document.getElementById('profile-section').style.display = 'block';
+                        } else {
+                            alert("Unable to fetch profile details.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            } else {
+                alert("Please log in to view your profile.");
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Function to handle logout
+        function logout() {
+            localStorage.removeItem("userEmail")
+            window.location.href = "/login.html"
+        }
+    </script>
+</body>
+</html>

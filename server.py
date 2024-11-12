@@ -1,23 +1,29 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import mysql.connector
 import os
+from flask_session import Session
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app, supports_credentials=True)  # Enable CORS and support credentials
 
-UPLOAD_FOLDER = './images'  # Define your image upload directory
+# Configurations for session
+app.config['SECRET_KEY'] = 'your_secret_key_here'  # Use a strong secret key for sessions
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)  # Set up session management
+
+UPLOAD_FOLDER = './images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Database connection
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
-        user="root",  # Replace with your MySQL username
-        password="Sivadeep_45",  # Replace with your MySQL password
-        database="autostore"  # Your database name
+        user="root",
+        password="Sivadeep_45",
+        database="autostore"
     )
 
 # User Registration Route
@@ -56,6 +62,8 @@ def login():
     conn.close()
 
     if user and check_password_hash(user['password'], password):
+        session['user_id'] = user['id']
+        session['is_admin'] = False
         return jsonify({"message": "Login successful!", "user": {"id": user['id'], "name": user['name'], "email": user['email']}})
     else:
         return jsonify({"error": "Invalid email or password!"}), 401
@@ -63,6 +71,41 @@ def login():
 # Admin Login Route
 @app.route('/admin-login', methods=['POST'])
 def admin_login():
+    data = request.get_json()
+    admin_id = "admin"
+    admin_password = "admin_pass"
+    if data['id'] == admin_id and data['password'] == admin_password:
+        session['user_id'] = admin_id
+        session['is_admin'] = True
+        return jsonify({"message": "Admin login successful!"}), 200
+    else:
+        return jsonify({"error": "Invalid admin credentials!"}), 401
+
+@app.route('/profile', methods=['GET'])
+def profile():
+    email = request.args.get('email')
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if user:
+        return jsonify({"profile": {"name": user['name'], "email": user['email'], "location": user['location']}})
+    else:
+        return jsonify({"error": "User not found"}), 404
+
+
+# Logout Route
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({"message": "Logged out successfully!"}), 200
+
+# Admin Login Route
+@app.route('/admin-login', methods=['POST'], endpoint='admin_login_post')
+def admin_login_post():
     data = request.get_json()
     admin_id = "admin"  # Replace with your predefined admin ID
     admin_password = "admin_pass"  # Replace with your predefined admin password
