@@ -4,57 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="register.css">
 </head>
 <body>
-    <h1>Register</h1>
-    <form id="registerForm">
-        <label for="regName">Name:</label>
-        <input type="text" id="regName" required>
+    <div class="register-container">
+        <h1>Register</h1>
+        <form id="registerForm">
+            <label for="regName">Name:</label>
+            <input type="text" id="regName" required>
 
-        <label for="regEmail">Email:</label>
-        <input type="email" id="regEmail" required>
+            <label for="regEmail">Email:</label>
+            <input type="email" id="regEmail" required>
 
-        <label for="regLocation">Location:</label>
-        <input type="text" id="regLocation" required>
+            <label for="regLocation">Location:</label>
+            <input type="text" id="regLocation" required>
 
-        <label for="regPassword">Password:</label>
-        <input type="password" id="regPassword" required>
+            <label for="regPassword">Password:</label>
+            <input type="password" id="regPassword" required>
 
-        <button type="submit">Register</button>
-    </form>
+            <button type="submit">Register</button>
+        </form>
+    </div>
     <script>
         // Handle registration
-document.getElementById("registerForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+        document.getElementById("registerForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-    const data = {
-        name: document.getElementById("regName").value,          // Make sure this ID matches
-        email: document.getElementById("regEmail").value,        // Make sure this ID matches
-        location: document.getElementById("regLocation").value,  // Make sure this ID matches
-        password: document.getElementById("regPassword").value   // Make sure this ID matches
-    };
+            const data = {
+                name: document.getElementById("regName").value,
+                email: document.getElementById("regEmail").value,
+                location: document.getElementById("regLocation").value,
+                password: document.getElementById("regPassword").value
+            };
 
-    try {
-        const response = await fetch('http://127.0.0.1:5000/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            try {
+                const response = await fetch('http://127.0.0.1:5000/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred during registration. Please try again.');
+            }
         });
-
-        const result = await response.json();
-        if (response.ok) {
-            alert(result.message);
-            // Optionally redirect or toggle forms here
-        } else {
-            alert(result.error);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred during registration. Please try again.');
-    }
-});
-
     </script>
 </body>
 </html>
