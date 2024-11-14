@@ -1,13 +1,25 @@
-// Toggle the mobile menu
-function toggleMenu() {
-    const navLinks = document.querySelector('.nav-links');
-    navLinks.classList.toggle('active');
+
+// Function to toggle the dropdown menu visibility
+function toggleDropdown() {
+    const dropdown = document.getElementById("loginDropdown");
+    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
 }
 
-// Toggle dropdown menu for Login
-function toggleDropdown() {
-    const dropdown = document.getElementById('loginDropdown');
-    dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
+// Function to hide the dropdown after selecting an option
+function hideDropdown() {
+    const dropdown = document.getElementById("loginDropdown");
+    dropdown.style.display = "none";
+}
+
+// Attach the hideDropdown function to each link in the dropdown
+document.querySelectorAll("#loginDropdown a").forEach(link => {
+    link.addEventListener("click", hideDropdown);
+});
+
+// Function to toggle the navbar menu for mobile view
+function toggleMenu() {
+    const navLinks = document.querySelector(".nav-links");
+    navLinks.classList.toggle("active");
 }
 
 // Load footer dynamically
