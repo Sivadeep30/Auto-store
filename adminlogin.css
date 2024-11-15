@@ -1,49 +1,106 @@
+/* General reset and box sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #919092, #767779); /* Gradient background */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
-    background-color: #f0f2f5;
 }
 
+/* Login container styling */
 .login-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.9); /* Slight transparent white background */
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
     text-align: center;
 }
 
+/* Heading styling */
 h2 {
+    color: #333;
+    font-size: 2em;
     margin-bottom: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
-form label {
+/* Form label and input styling */
+label {
     display: block;
-    margin-bottom: 8px;
+    font-size: 1em;
+    margin: 10px 0;
+    color: #555;
+    text-align: left;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    background-color: #f9f9f9;
+    transition: border 0.3s;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #2575fc; /* Focus effect */
+    outline: none;
+    box-shadow: 0 0 5px rgba(37, 117, 252, 0.4);
+}
+
+/* Button styling */
+button {
+    background-color: #2575fc;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1em;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
     font-weight: bold;
 }
 
-form input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
 button:hover {
-    background-color: #0056b3;
+    background-color: #1a5ab0; /* Hover effect */
+}
+
+/* Error message styling */
+#error-message {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #ff4d4d;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 30px;
+    }
+    
+    h2 {
+        font-size: 1.6em;
+    }
+
+    input[type="text"], input[type="password"] {
+        padding: 10px;
+    }
+
+    button {
+        padding: 10px 15px;
+    }
 }
