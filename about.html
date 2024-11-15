@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - AutoStore</title>
+    <link rel="stylesheet" href="about.css">
+</head>
+<body>
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="content">
+            <h1>About AutoStore</h1>
+            <p>Welcome to AutoStore, your ultimate destination for finding both new and used cars. Our mission is to provide you with the best car purchasing experience with a wide variety of models and affordable prices. Whether you're looking for the latest models or reliable used cars, we've got you covered!</p>
+        </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section class="feedback-section">
+        <h2>Customer Feedback</h2>
+        <button id="feedbackButton" onclick="showFeedbackForm()">Add Feedback</button>
+
+        <!-- Feedback Form (Initially Hidden) -->
+        <div id="feedbackFormContainer" class="feedback-form-container" style="display: none;">
+            <h3>Submit Your Feedback</h3>
+            <form id="feedbackForm" onsubmit="submitFeedback(event)">
+                <textarea id="feedbackText" placeholder="Write your feedback here..." required></textarea>
+                <button type="submit">Submit</button>
+                <button type="button" onclick="hideFeedbackForm()">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Display Feedbacks -->
+        <div id="feedbackList" class="feedback-list">
+            <!-- Feedback entries will appear here -->
+        </div>
+    </section>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:5000';
+
+        // Show Feedback Form
+        function showFeedbackForm() {
+            document.getElementById("feedbackFormContainer").style.display = "block";
+        }
+
+        // Hide Feedback Form
+        function hideFeedbackForm() {
+            document.getElementById("feedbackFormContainer").style.display = "none";
+        }
+
+        // Submit Feedback
+        async function submitFeedback(event) {
+            event.preventDefault();
+            const feedbackText = document.getElementById("feedbackText").value;
+            if (feedbackText) {
+                try {
+                    const response = await fetch(`${API_URL}/submit-feedback`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ feedback_text: feedbackText })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        document.getElementById("feedbackText").value = '';
+                        hideFeedbackForm();
+                        loadFeedback();
+                    } else {
+                        alert(result.error);
+                    }
+                } catch (error) {
+                    console.error('Error submitting feedback:', error);
+                }
+            }
+        }
+
+        // Load Feedback from Server
+        async function loadFeedback() {
+            try {
+                const response = await fetch(`${API_URL}/feedback`);
+                const feedbacks = await response.json();
+                const feedbackList = document.getElementById("feedbackList");
+                feedbackList.innerHTML = ''; // Clear existing feedback
+                feedbacks.forEach(feedback => {
+                    const feedbackItem = document.createElement("div");
+                    feedbackItem.classList.add("feedback-item");
+                    feedbackItem.innerText = `${feedback.feedback_text} (Posted on: ${new Date(feedback.created_at).toLocaleDateString()})`;
+                    feedbackList.appendChild(feedbackItem);
+                });
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+            }
+        }
+
+        // Initial Load
+        loadFeedback();
+    </script>
+</body>
+</html>

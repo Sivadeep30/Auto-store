@@ -63,10 +63,13 @@ def login():
 
     if user and check_password_hash(user['password'], password):
         session['user_id'] = user['id']
+        session['user_email'] = user['email']
+        print( session['user_email'])
         session['is_admin'] = False
         return jsonify({"message": "Login successful!", "user": {"id": user['id'], "name": user['name'], "email": user['email']}})
     else:
         return jsonify({"error": "Invalid email or password!"}), 401
+
 
 # Admin Login Route
 @app.route('/admin-login', methods=['POST'])
@@ -229,11 +232,17 @@ def add_used_car():
         image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
         image.save(image_path)
 
+    # Retrieve user email from session
+    user_email = request.form.get("user_email")
+    print(user_email)
+
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO used_cars (carName, brand, rate, type, description, imageUrl) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (car_name, brand, rate, car_type, description, image_filename))
+        cursor.execute(
+            "INSERT INTO used_cars (carName, brand, rate, type, description, imageUrl, user_email) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            (car_name, brand, rate, car_type, description, image_filename, user_email)
+        )
         conn.commit()
         cursor.close()
         conn.close()
@@ -250,7 +259,24 @@ def get_used_cars():
     cars = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(cars), 200
+
+    # Get the logged-in user's email from session
+    user_email = request.args.get('email')
+
+    # Add the login status and ownership check to each car
+    for car in cars:
+        if user_email and car['user_email'] == user_email:  # Check if the user is the owner
+            car['is_owner'] = True  # Show delete button if the user is the owner
+        else:
+            car['is_owner'] = False  # Hide delete button if the user is not the owner
+    print(car)
+    response = {
+        "cars": cars,
+        "loggedIn": bool(user_email)  # Check if the user is logged in
+    }
+    
+    return jsonify(response), 200
+
 
 # Delete Used Car by ID
 @app.route('/delete-used-car/<int:car_id>', methods=['DELETE'])
@@ -369,6 +395,35 @@ def get_purchases():
 #        print("Error fetching purchases:", str(e))
  #   return jsonify({"error": str(e)}), 500
 
+# Submit Feedback Route
+@app.route('/submit-feedback', methods=['POST'])
+def submit_feedback():
+    data = request.get_json()
+    feedback_text = data.get('feedback_text')
+
+    if not feedback_text:
+        return jsonify({"error": "Feedback text is required!"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("INSERT INTO feedback (feedback_text) VALUES (%s)", (feedback_text,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Feedback submitted successfully!"}), 200
+
+# Get Feedback Route
+@app.route('/feedback', methods=['GET'])
+def get_feedback():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM feedback ORDER BY created_at DESC")
+    feedbacks = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return jsonify(feedbacks), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

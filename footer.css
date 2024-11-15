@@ -2,11 +2,11 @@
 
 /* Footer styling */
 footer {
-    background-color: #1E3A8A; /* Midnight Blue */
+    background-color: #333; /* Midnight Blue */
     color: #FAFAFA; /* Soft White */
     padding: 2rem 2rem; /* Padding for top and bottom */
     text-align: center; /* Center text */
-    border-top: 2px solid #00B4D8; /* Border at the top */
+    border-top: 2px solid #332; /* Border at the top */
     margin-top: 20px; /* Space above the footer */
 }
 
@@ -30,7 +30,7 @@ footer {
 }
 
 .footer-links a:hover {
-    color: #00B4D8; /* Change color on hover */
+    color: #ff6600; /* Change color on hover */
 }
 
 .social-media a {

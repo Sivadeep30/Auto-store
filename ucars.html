@@ -70,7 +70,7 @@
         
                 const formData = new FormData(addUsedCarForm);  // Automatically includes all form fields
                 formData.append("image", document.getElementById("image").files[0]); // Append the image file
-        
+                formData.append("user_email",localStorage.getItem("userEmail"));
                 fetch("http://127.0.0.1:5000/add-used-car", {
                     method: "POST",
                     body: formData
@@ -85,35 +85,37 @@
                 })
                 .catch(error => console.error("Error adding car:", error));
             });
-        
+
             // Fetch all used cars from the server
-            function fetchUsedCars() {
-                fetch("http://127.0.0.1:5000/get-used-cars")
-                .then(response => response.json())
-                .then(data => {
-                    populateUsedCars(data); // Pass the fetched data to populate the UI
-                })
-                .catch(error => console.error("Error fetching used cars:", error));
-            }
-        
-            // Display car cards
-            function populateUsedCars(cars) {
-                usedCarsContainer.innerHTML = "";
-                cars.forEach((car, index) => {
-                    const carCard = document.createElement("div");
-                    carCard.className = "car-card";
-                    carCard.innerHTML = `
-                        <h3>${car.carName}</h3>
-                        <p>Brand: ${car.brand}</p>
-                        <p>Rate: $${car.rate}</p>
-                        <p>Type: ${car.type}</p>
-                        <p>${car.description}</p>
-                        <img src="images/${car.imageUrl}" alt="${car.carName}" />
-                        <button onclick="deleteCar(${car.id})">Delete</button>
-                    `;
-                    usedCarsContainer.appendChild(carCard);
-                });
-            }
+    function fetchUsedCars() {
+        const userEmail = localStorage.getItem("userEmail");
+    fetch( `http://127.0.0.1:5000/get-used-cars?email=${userEmail}`)
+        .then(response => response.json())
+        .then(data => {
+            populateUsedCars(data.cars, data.loggedIn); // Pass login status
+        })
+        .catch(error => console.error("Error fetching used cars:", error));
+}
+
+// Display car cards with conditional delete button
+function populateUsedCars(cars, isLoggedIn) {
+    usedCarsContainer.innerHTML = "";
+    cars.forEach((car, index) => {
+        const carCard = document.createElement("div");
+        carCard.className = "car-card";
+        carCard.innerHTML = `
+            <h3>${car.carName}</h3>
+            <p>Brand: ${car.brand}</p>
+            <p>Rate: $${car.rate}</p>
+            <p>Type: ${car.type}</p>
+            <p>${car.description}</p>
+            <img src="images/${car.imageUrl}" alt="${car.carName}" />
+            ${car.is_owner?`<button onclick="deleteCar(${car.id})">Delete</button>`:""}
+        `;
+        usedCarsContainer.appendChild(carCard);
+    });
+}
+
         
             // Delete car
             window.deleteCar = function (carId) {
