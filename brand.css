@@ -22,7 +22,7 @@ h1 {
 }
 
 .brand-card {
-    background-color: #ffffff;
+    background-color: #a7a1a1;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -45,5 +45,5 @@ h1 {
 .brand-card h3 {
     padding: 10px 0;
     font-size: 18px;
-    color: #007BFF;
+    color: #ff6600b7;
 }
