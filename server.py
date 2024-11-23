@@ -1,10 +1,13 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_file
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import mysql.connector
 import os
 from flask_session import Session
+from fpdf import FPDF
+from io import BytesIO
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)  # Enable CORS and support credentials
@@ -424,6 +427,89 @@ def get_feedback():
     conn.close()
 
     return jsonify(feedbacks), 200
+
+
+
+
+
+@app.route('/download-purchases', methods=['GET'])
+def download_purchases():
+    try:
+        # Get the date parameter from the query string
+        date = request.args.get('date')
+        if not date:
+            return jsonify({"error": "Date is required"}), 400
+
+        # Connect to the database and fetch purchases for the given date
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT * FROM purchases WHERE DATE(purchase_date) = %s"
+        cursor.execute(query, (date,))
+        purchases = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        if not purchases:
+            return jsonify({"error": "No purchases found for the given date"}), 404
+
+        # Create a PDF using FPDF
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+
+        # Add Title
+        pdf.cell(0, 10, txt="Purchase Records", ln=True, align='C')
+        pdf.ln(10)  # Add a line break
+
+        # Add Table Header
+        pdf.set_font("Arial", style="B", size=10)  # Bold header font
+        pdf.cell(40, 10, txt="ID", border=1, align='C')
+        pdf.cell(60, 10, txt="Name", border=1, align='C')
+        pdf.cell(90, 10, txt="Details", border=1, align='C')
+        pdf.ln()  # Move to the next row
+
+        # Add Table Rows
+        pdf.set_font("Arial", size=10)  # Regular font for rows
+        for purchase in purchases:
+            pdf.cell(40, 10, txt=str(purchase['id']), border=1, align='C')
+            pdf.cell(60, 10, txt=purchase['name'], border=1, align='C')
+            details = (
+                f"Location: {purchase['location']}\n"
+                f"Phone: {purchase['phone']}\n"
+                f"Date: {purchase['purchase_date']}\n"
+                f"Car Name: {purchase['car_name']}"
+            )
+            pdf.multi_cell(90, 10, txt=details, border=1)  # Multi-line cell for details
+            pdf.ln()  # Add a line break after the row
+
+        # Save the PDF to a temporary file and read it back into a BytesIO object
+        temp_filename = "temp_purchases.pdf"
+        pdf.output(temp_filename)
+
+        with open(temp_filename, 'rb') as file:
+            pdf_output = BytesIO(file.read())
+
+        # Send the PDF as a downloadable file
+        return send_file(
+            pdf_output,
+            as_attachment=True,
+            download_name=f"purchases_{date}.pdf",
+            mimetype='application/pdf'
+        )
+    except Exception as e:
+        print(f"Error downloading purchases: {e}")
+        return jsonify({"error": "An error occurred while downloading purchases"}), 500
+    finally:
+        # Cleanup: Remove the temporary file
+        import os
+        if os.path.exists("temp_purchases.pdf"):
+            os.remove("temp_purchases.pdf")
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

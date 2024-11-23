@@ -86,6 +86,13 @@
             <!-- Rows will be added dynamically by JavaScript -->
         </tbody>
     </table>
+    <h3>Download Records by Date</h3>
+<div class="download-container">
+    <label for="downloadDate">Select Date:</label>
+    <input type="date" id="downloadDate" required>
+    <button onclick="downloadRecords()">Download</button>
+</div>
+
 
     <script>
         // Fetch initial car data and purchase records on page load
@@ -222,6 +229,39 @@
                 })
                 .catch(error => console.error("Error fetching purchases:", error));
         }
+        function downloadRecords() {
+            const selectedDate = document.getElementById("downloadDate").value;
+        
+            if (!selectedDate) {
+                alert("Please select a date.");
+                return;
+            }
+        
+            fetch(`http://localhost:5000/download-purchases?date=${selectedDate}`, {
+                method: "GET"
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.error || "Failed to fetch purchase records.");
+                    });
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create a link to download the PDF
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `purchase_records_${selectedDate}.pdf`;
+                link.click();
+                window.URL.revokeObjectURL(url); // Clean up the URL object
+            })
+            .catch(error => {
+                console.error("Error downloading records:", error);
+                alert(error.message);
+            });
+        }        
     </script>
 </body>
 </html>
