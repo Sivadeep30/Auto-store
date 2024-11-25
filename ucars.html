@@ -47,6 +47,15 @@
     <div id="usedCarsContainer" class="used-cars-container">
         <!-- Car cards will be populated here -->
     </div>
+    <!-- Modal for showing contact information -->
+<div id="contactModal" class="modal">
+    <div class="modal-content">
+        <span id="closeContactModal" class="close">&times;</span>
+        <h2>Contact Owner</h2>
+        <p id="ownerEmail"></p>
+    </div>
+</div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const addCarBtn = document.getElementById("addCarBtn");
@@ -127,6 +136,71 @@ function populateUsedCars(cars, isLoggedIn) {
                 })
                 .catch(error => console.error("Error deleting car:", error));
             };
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const contactModal = document.getElementById("contactModal");
+            const closeContactModal = document.getElementById("closeContactModal");
+            const ownerEmailElement = document.getElementById("ownerEmail");
+        
+            // Close contact modal
+            closeContactModal.onclick = () => contactModal.style.display = "none";
+        
+            window.onclick = function (event) {
+                if (event.target == contactModal) {
+                    contactModal.style.display = "none";
+                }
+            };
+        
+            // Show modal with email details
+            window.showContact = function (email) {
+                ownerEmailElement.textContent = `Email: ${email}`;
+                contactModal.style.display = "block";
+            };
+        
+            // Fetch all used cars from the server
+            function fetchUsedCars() {
+                const userEmail = localStorage.getItem("userEmail");
+                fetch(`http://127.0.0.1:5000/get-used-cars?email=${userEmail}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        populateUsedCars(data.cars, data.loggedIn);
+                    })
+                    .catch(error => console.error("Error fetching used cars:", error));
+            }
+        
+            // Populate car cards with contact functionality
+            function populateUsedCars(cars, isLoggedIn) {
+                usedCarsContainer.innerHTML = "";
+                cars.forEach((car) => {
+                    const carCard = document.createElement("div");
+                    carCard.className = "car-card";
+                    carCard.innerHTML = `
+                        <h3>${car.carName}</h3>
+                        <p>Brand: ${car.brand}</p>
+                        <p>Rate: $${car.rate}</p>
+                        <p>Type: ${car.type}</p>
+                        <p>${car.description}</p>
+                        <img src="images/${car.imageUrl}" alt="${car.carName}" />
+                        <button onclick="showContact('${car.user_email}')">Contact</button>
+                        ${car.is_owner ? `<button onclick="deleteCar(${car.id})">Delete</button>` : ""}
+                    `;
+                    usedCarsContainer.appendChild(carCard);
+                });
+            }
+        
+            // Delete car
+            window.deleteCar = function (carId) {
+                fetch(`http://127.0.0.1:5000/delete-used-car/${carId}`, {
+                    method: "DELETE"
+                })
+                    .then(() => {
+                        fetchUsedCars(); // Refresh the list after deletion
+                    })
+                    .catch(error => console.error("Error deleting car:", error));
+            };
+        
+            // Initial fetch of cars
+            fetchUsedCars();
         });
         
     </script>
