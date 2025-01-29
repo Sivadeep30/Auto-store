@@ -49,7 +49,7 @@
             <button type="submit">Add Car</button>
         </form>
     </div>
-
+    
     <!-- Manage Cars Section -->
     <h2>Manage Cars</h2>
     <table id="carsTable">
@@ -92,6 +92,7 @@
     <input type="date" id="downloadDate" required>
     <button onclick="downloadRecords()">Download</button>
 </div>
+
 
 
     <script>
@@ -163,10 +164,10 @@
         function editCar(carId) {
             const carName = prompt("Enter new car name:");
             const brand = prompt("Enter new brand:");
-            const rate = prompt("Enter new rate:");
+           const rate = prompt("Enter new rate:");
             const type = prompt("Enter new type (Petrol, Diesel, Electric):");
             const description = prompt("Enter new description:");
-
+//
             const updatedData = {
                 carName: carName,
                 brand: brand,
@@ -174,7 +175,7 @@
                 type: type,
                 description: description
             };
-
+//
             fetch(`http://localhost:5000/update_car/${carId}`, {
                 method: "PUT",
                 headers: {
@@ -182,14 +183,14 @@
                 },
                 body: JSON.stringify(updatedData)
             })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                fetchCars();
-            })
+           .then(response => response.json())
+          .then(data => {
+               alert(data.message);
+               fetchCars();
+           })
             .catch(error => console.error("Error updating car:", error));
         }
-
+       
         // Delete car from the database
         function deleteCar(carId) {
             fetch(`http://localhost:5000/delete_car/${carId}`, {
