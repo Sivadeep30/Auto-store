@@ -3,91 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Online Automobile Store</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>AutoStore - Premium Cars</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #f59e0b;
+            --text-color: #1f2937;
+            --light-gray: #f3f4f6;
+            --dark-gray: #4b5563;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            line-height: 1.6;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+            background-color: var(--light-gray);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 12px 16px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 64px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            background-color: #e67e22;
+        }
+
+        /* Featured Cars */
+        .featured-cars {
+            max-width: 1200px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+        }
+
+        .featured-cars h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 3rem;
+        }
+
+        .car-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .car-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .car-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .car-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .car-details {
+            padding: 1.5rem;
+        }
+
+        .car-title {
+            font-size: 1.4rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .car-price {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .testimonials h2 {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 3rem;
+        }
+
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--light-gray);
+            padding: 2rem;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: var(--dark-gray);
+        }
+
+        .testimonial-card h4 {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-color);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #d1d5db;
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #374151;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navbar and Header -->
+    <!-- Navigation -->
     <header>
-        <div class="logo">AutoStore</div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="carbrand.html">Cars</a></li>
-                <li><a href="ucars.html">Used Cars</a></li>
-                <li><a href="about.html">About</a></li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn" onclick="toggleDropdown()">Login</a>
-                    <div id="loginDropdown" class="dropdown-content" style="display: none;">
-                        <a href="login.html">User</a>
-                        <a href="adminlogin.html">Admin</a>
-                    </div>
-                </li>
-                <li id="profileMenu" style="display: none;">
-                    <a href="profile.html">Profile</a>
-                </li>
-            </ul>
-        </nav>
+        <div class="nav-container">
+            <a href="#" class="logo">AutoStore</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="carbrand.html">New Cars</a></li>
+                    <li><a href="ucars.html">Used Cars</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">Login</a>
+                        <div class="dropdown-content">
+                            <a href="login.html">User Login</a>
+                            <a href="adminlogin.html">Admin Login</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="overlay">
-            <h1>Welcome to AutoStore</h1>
-            <p>Find your dream car with the best deals!</p>
-            <a href="carbrand.html" class="cta-button">Explore Cars</a>
+    <section class="hero-section" id="home">
+        <div class="hero-content">
+            <h1>Find Your Perfect Car</h1>
+            <p>Discover an extensive collection of premium vehicles at unbeatable prices</p>
+            <a href="#cars" class="cta-button">Explore Our Collection</a>
         </div>
-    </div>
+    </section>
 
-    <!-- Featured Cars Section -->
-    <section class="featured-cars">
-        <h2>Featured Cars</h2>
-        <div class="car-cards">
+    <!-- Featured Cars -->
+    <section class="featured-cars" id="cars">
+        <h2>Featured Vehicles</h2>
+        <div class="car-grid">
             <div class="car-card">
-                <img src="images/audi.jpg" alt="Car Model 1">
-                <h3>Car Model 1</h3>
-                <p>Starting from $30,000</p>
+                <img src="https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&q=80" alt="BMW M4" class="car-image">
+                <div class="car-details">
+                    <h3 class="car-title">BMW M4 Competition</h3>
+                    <p class="car-price">$84,900</p>
+                    <p>Experience unrivaled performance and luxury in the all-new BMW M4 Competition.</p>
+                </div>
             </div>
             <div class="car-card">
-                <img src="images/brand.jpeg" alt="Car Model 2">
-                <h3>Car Model 2</h3>
-                <p>Starting from $45,000</p>
+                <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80" alt="Mercedes AMG" class="car-image">
+                <div class="car-details">
+                    <h3 class="car-title">Mercedes-AMG GT</h3>
+                    <p class="car-price">$118,600</p>
+                    <p>The perfect blend of luxury and performance, engineered to perfection.</p>
+                </div>
             </div>
             <div class="car-card">
-                <img src="images/ford.jpg" alt="Car Model 3">
-                <h3>Car Model 3</h3>
-                <p>Starting from $55,000</p>
+                <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&q=80" alt="Audi RS" class="car-image">
+                <div class="car-details">
+                    <h3 class="car-title">Audi RS e-tron GT</h3>
+                    <p class="car-price">$139,900</p>
+                    <p>The future of electric performance is here. Experience the revolution.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Section -->
+    <!-- Testimonials -->
     <section class="testimonials">
         <h2>What Our Customers Say</h2>
-        <div class="testimonial">
-            <p>"I found my dream car at AutoStore, and the process was seamless!"</p>
-            <h4>John Doe</h4>
-        </div>
-        <div class="testimonial">
-            <p>"Best prices and excellent service. Highly recommended!"</p>
-            <h4>Jane Smith</h4>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"The team at AutoStore made finding my dream car an absolute pleasure. Their expertise and dedication to customer service are unmatched."</p>
+                <h4>Michael Anderson</h4>
+            </div>
+            <div class="testimonial-card">
+                <p>"I couldn't be happier with my purchase. The entire process was smooth, transparent, and professional from start to finish."</p>
+                <h4>Sarah Thompson</h4>
+            </div>
+            <div class="testimonial-card">
+                <p>"The best car buying experience I've ever had. The selection of vehicles is impressive, and the staff is incredibly knowledgeable."</p>
+                <h4>David Wilson</h4>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <link rel="stylesheet" href="footer.css">
         <div class="footer-content">
-            <div class="footer-links">
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact</a>
-                <a href="terms.html">Terms of Service</a>
-                <a href="privacy.html">Privacy Policy</a>
+            <div class="footer-section">
+                <h3>About AutoStore</h3>
+                <p>Your trusted destination for premium automobiles. We offer the finest selection of new and used cars with exceptional service.</p>
             </div>
-            <div class="social-media">
-                <a href="#" aria-label="Facebook"><img src="images/facebook.jpg" alt="Facebook"></a>
-                <a href="#" aria-label="Twitter"><img src="images/x.jpg" alt="Twitter"></a>
-                <a href="#" aria-label="Instagram"><img src="images/instagram.jpg" alt="Instagram"></a>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#home">Home</a>
+                <a href="#cars">New Cars</a>
+                <a href="#used">Used Cars</a>
+                <a href="#about">About Us</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: info@autostore.com</p>
+                <p>Phone: (555) 123-4567</p>
+                <p>Address: 123 Luxury Drive, Car City, CC 12345</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <p>Stay connected with us on social media for the latest updates and special offers.</p>
+                <div class="social-links">
+                    <a href="#facebook">Facebook</a>
+                    <a href="#twitter">Twitter</a>
+                    <a href="#instagram">Instagram</a>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
@@ -95,6 +416,34 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Dropdown menu functionality
+        document.querySelector('.dropbtn').addEventListener('click', function() {
+            const dropdownContent = document.querySelector('.dropdown-content');
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            if (!e.target.matches('.dropbtn')) {
+                const dropdowns = document.getElementsByClassName('dropdown-content');
+                for (let dropdown of dropdowns) {
+                    if (dropdown.style.display === 'block') {
+                        dropdown.style.display = 'none';
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
