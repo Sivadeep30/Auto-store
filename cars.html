@@ -10,29 +10,43 @@
     <h1>Available Cars for <span id="brandTitle"></span></h1>
     <div class="car-container" id="carList"></div>
 
-    <!-- Hidden form for buying a car -->
+    <!-- Updated modal structure for better scrolling -->
     <div id="buyFormContainer" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2>Purchase Car</h2>
-            <form id="buyForm">
-                <label for="carName">Car Name:</label>
-                <input type="text" id="carName" name="carName" readonly><br>
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <h2>Purchase Car</h2>
+                <form id="buyForm">
+                    <div class="form-group">
+                        <label for="carName">Car Name:</label>
+                        <input type="text" id="carName" name="carName" readonly>
+                    </div>
 
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required><br>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required><br>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
 
-                <label for="phone">Phone:</label>
-                <input type="tel" id="phone" name="phone" required><br>
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
 
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="location" required><br>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location" required>
+                    </div>
 
-                <button type="button" onclick="submitPurchase()">Submit</button>
-                <button type="button" onclick="closeForm()">Cancel</button>
-            </form>
+                    <div class="button-group">
+                        <button type="button" onclick="submitPurchase()">Submit</button>
+                        <button type="button" onclick="closeForm()">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -68,18 +82,17 @@
                 .catch(error => console.error("Error fetching cars:", error));
         }
 
-        // Open the buy form with the selected car name
         function openForm(carName) {
             document.getElementById("carName").value = carName;
             document.getElementById("buyFormContainer").style.display = "block";
+            document.body.style.overflow = "hidden"; // Prevent background scrolling
         }
 
-        // Close the buy form
         function closeForm() {
             document.getElementById("buyFormContainer").style.display = "none";
+            document.body.style.overflow = "auto"; // Restore background scrolling
         }
 
-        // Submit purchase details
         function submitPurchase() {
             const formData = {
                 carName: document.getElementById("carName").value,
@@ -89,7 +102,6 @@
                 location: document.getElementById("location").value
             };
 
-            // Send POST request to backend server
             fetch("http://localhost:5000/purchase", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -98,10 +110,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message) {
-                    alert(data.message); // Display success message
-                    closeForm(); // Close the form after successful submission
+                    alert(data.message);
+                    closeForm();
                 } else {
-                    alert("An error occurred. Please try again."); // Display error message
+                    alert("An error occurred. Please try again.");
                 }
             })
             .catch(error => {
@@ -110,7 +122,6 @@
             });
         }
 
-        // Call the function on page load
         if (brand) {
             fetchCarsByBrand(brand);
         }
